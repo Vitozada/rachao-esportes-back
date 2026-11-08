@@ -10,45 +10,27 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "jogadores_times", uniqueConstraints = @UniqueConstraint(columnNames = {"jogador_id", "time_id"}))
+@Table(name = "JOGADOR_TIME", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"ID_JOGADOR", "ID_TIME"})})
 public class JogadorTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "jogador_id", nullable = false)
+    @JoinColumn(name = "ID_JOGADOR", nullable = false)
     private Jogador jogador;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "time_id", nullable = false)
-    private Times time;
+    @JoinColumn(name = "ID_TIME", nullable = false)
+    private Time time;
 
-    public JogadorTime() {
-    }
-
-    public Times getTime() {
-        return time;
-    }
-
-    public void setTime(Times time) {
-        this.time = time;
-    }
-
-    public Jogador getJogador() {
-        return jogador;
-    }
-
-    public void setJogador(Jogador jogador) {
-        this.jogador = jogador;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
+    public JogadorTime() {}
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public Jogador getJogador() { return jogador; }
+    public void setJogador(Jogador jogador) { this.jogador = jogador; }
+    public Time getTime() { return time; }
+    public void setTime(Time time) { this.time = time; }
 }

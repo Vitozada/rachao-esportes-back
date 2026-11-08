@@ -5,29 +5,84 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
+@Table(name = "Jogador")
 public class Jogador {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
+
+    @Column(nullable = false)
+    private String nome;
+
+    @Column(nullable = false, unique = true)
+    private String cpf;
+
+    private String cep;
+    
+    @Column(nullable = false)
+    private LocalDate dataNasc;
+
     @Column(nullable = false, unique = true)
     private String email;
+
     @Column(nullable = false)
     private String senha;
-    private String nome;
-    private String cep;
-    private Date dataNascimento;
+
     private String descricao;
+
+    private Double altura;
 
     public Jogador() {
     }
 
     public Jogador(String nome) {
         this.nome = nome;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public String getCep() {
+        return cep;
+    }
+
+    public void setCep(String cep) {
+        this.cep = cep;
+    }
+
+    public LocalDate getDataNasc() {
+        return dataNasc;
+    }
+
+    public void setDataNasc(LocalDate dataNasc) {
+        this.dataNasc = dataNasc;
     }
 
     public String getEmail() {
@@ -46,30 +101,6 @@ public class Jogador {
         this.senha = senha;
     }
 
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getCep() {
-        return cep;
-    }
-
-    public void setCep(String cep) {
-        this.cep = cep;
-    }
-
-    public Date getDataNascimento() {
-        return dataNascimento;
-    }
-
-    public void setDataNascimento(Date dataNascimento) {
-        this.dataNascimento = dataNascimento;
-    }
-
     public String getDescricao() {
         return descricao;
     }
@@ -78,11 +109,11 @@ public class Jogador {
         this.descricao = descricao;
     }
 
-    public long getId() {
-        return id;
+    public Double getAltura() {
+        return altura;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setAltura(Double altura) {
+        this.altura = altura;
     }
 }

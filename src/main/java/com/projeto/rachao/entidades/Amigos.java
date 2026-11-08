@@ -10,45 +10,33 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "amizades", uniqueConstraints = @UniqueConstraint(columnNames = {"jogador_id", "amigo_id"}))
+@Table(name = "AMIGOS", uniqueConstraints = { @UniqueConstraint(columnNames = {"ID_JOGADOR", "ID_AMIGO"})})
 public class Amigos {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "jogador_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "ID_JOGADOR", nullable = false)
     private Jogador jogador;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "amigo_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "ID_AMIGO", nullable = false)
     private Jogador amigo;
 
     public Amigos() {
     }
 
-    public Jogador getAmigo() {
-        return amigo;
-    }
-
-    public void setAmigo(Jogador amigo) {
+    public Amigos(Jogador jogador, Jogador amigo) {
+        this.jogador = jogador;
         this.amigo = amigo;
     }
 
-    public Jogador getJogador() {
-        return jogador;
-    }
-
-    public void setJogador(Jogador jogador) {
-        this.jogador = jogador;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public Jogador getJogador() { return jogador; }
+    public void setJogador(Jogador jogador) { this.jogador = jogador; }
+    public Jogador getAmigo() { return amigo; }
+    public void setAmigo(Jogador amigo) { this.amigo = amigo; }
 }
