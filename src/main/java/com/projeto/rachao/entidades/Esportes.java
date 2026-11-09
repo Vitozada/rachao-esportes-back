@@ -10,7 +10,6 @@ public class Esportes {
     @Column(name = "ESPORTE")
     private Esportes esporte;
 
-
     public static enum EsportesLista {
         BASQUETE,
         VOLEI,
