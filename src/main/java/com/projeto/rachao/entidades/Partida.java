@@ -30,10 +30,13 @@ public class Partida {
     @Column(name = "QTD_TIMES")
     private Integer qtdTimes;
 
+    @Column(name = "QTD_JOGADORES_TIME")
+    private Integer qtdJogadoresTime;
+
     @Column(name = "DATA_HORA")
     private LocalDateTime dataHora;
 
-    private Boolean status;
+    private StatusPartida.StatusAtual status;
 
     private String local;
 
@@ -53,8 +56,8 @@ public class Partida {
     public void setQtdTimes(Integer qtdTimes) { this.qtdTimes = qtdTimes; }
     public LocalDateTime getDataHora() { return dataHora; }
     public void setDataHora(LocalDateTime dataHora) { this.dataHora = dataHora; }
-    public Boolean getStatus() { return status; }
-    public void setStatus(Boolean status) { this.status = status; }
+    public StatusPartida.StatusAtual getStatus() { return status; }
+    public void setStatus(StatusPartida.StatusAtual status) { this.status = status; }
     public String getLocal() { return local; }
     public void setLocal(String local) { this.local = local; }
     public LocalTime getDuracao() { return duracao; }

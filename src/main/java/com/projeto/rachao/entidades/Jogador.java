@@ -7,7 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Table(name = "Jogador")
@@ -26,7 +26,7 @@ public class Jogador {
     private String cep;
     
     @Column(nullable = false)
-    private LocalDate dataNasc;
+    private Date dataNasc;
 
     @Column(nullable = false, unique = true)
     private String email;
@@ -77,11 +77,11 @@ public class Jogador {
         this.cep = cep;
     }
 
-    public LocalDate getDataNasc() {
+    public Date getDataNasc() {
         return dataNasc;
     }
 
-    public void setDataNasc(LocalDate dataNasc) {
+    public void setDataNasc(Date dataNasc) {
         this.dataNasc = dataNasc;
     }
 

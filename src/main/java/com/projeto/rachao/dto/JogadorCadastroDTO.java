@@ -1,5 +1,6 @@
 package com.projeto.rachao.dto;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class JogadorCadastroDTO {
@@ -43,7 +44,7 @@ public class JogadorCadastroDTO {
         this.cep = cep;
     }
 
-    public Date getDataNascimento() {
+    public LocalDate getDataNascimento() {
         return dataNascimento;
     }
 

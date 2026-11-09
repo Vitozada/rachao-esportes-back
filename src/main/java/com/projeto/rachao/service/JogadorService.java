@@ -30,7 +30,7 @@ public class JogadorService {
         jogador.setNome(dto.getNome());
         jogador.setEmail(dto.getEmail());
         jogador.setCep(dto.getCep());
-        jogador.setDataNascimento(dto.getDataNascimento());
+        jogador.setDataNasc(dto.getDataNascimento());
         jogador.setDescricao(dto.getDescricao());
         jogador.setSenha(passwordEncoder.encode(dto.getSenha()));
         Jogador salvo = jogadorRepository.save(jogador);
@@ -40,7 +40,7 @@ public class JogadorService {
         resposta.setNome(salvo.getNome());
         resposta.setEmail(salvo.getEmail());
         resposta.setCep(salvo.getCep());
-        resposta.setDataNascimento(salvo.getDataNascimento());
+        resposta.setDataNascimento(salvo.getDataNasc());
         resposta.setDescricao(salvo.getDescricao());
 
         return resposta;
