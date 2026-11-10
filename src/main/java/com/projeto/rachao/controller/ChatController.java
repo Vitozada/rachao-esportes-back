@@ -19,37 +19,58 @@ import java.util.List;
 @RequestMapping("/api/chats")
 @CrossOrigin(origins = "http://localhost:4200")
 /** Endpoints CRUD dos chats associados às partidas. */
-public class ChatController extends CrudControllerSupport<Chat> {
+public class ChatController {
 
+    // Repository responsável pelo acesso aos chats no banco.
+    private final ChatRepository repository;
+
+    // O Spring injeta automaticamente o repository neste controller.
     public ChatController(ChatRepository repository) {
-        super(repository);
+        this.repository = repository;
     }
 
+    // Retorna todos os chats cadastrados.
     @GetMapping
     public List<Chat> listar() {
-        return listarRegistros();
+        return repository.findAll();
     }
 
+    // Procura um chat pelo seu ID.
     @GetMapping("/{id}")
     public ResponseEntity<Chat> buscar(@PathVariable Long id) {
-        return buscarRegistro(id);
+        return repository.findById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    // Cria um novo chat a partir dos dados recebidos no JSON.
     @PostMapping
     public ResponseEntity<Chat> criar(@RequestBody Chat registro) {
-        return criarRegistro(registro);
+        return ResponseEntity.status(201).body(repository.save(registro));
     }
 
+    // Atualiza os dados de um chat existente.
     @PutMapping("/{id}")
     public ResponseEntity<Chat> atualizar(
             @PathVariable Long id,
             @RequestBody Chat registro
     ) {
-        return atualizarRegistro(id, registro);
+        if (!repository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        registro.setId(id);
+        return ResponseEntity.ok(repository.save(registro));
     }
 
+    // Exclui um chat pelo ID.
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> apagar(@PathVariable Long id) {
-        return apagarRegistro(id);
+        if (!repository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        repository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }

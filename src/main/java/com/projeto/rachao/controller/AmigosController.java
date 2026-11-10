@@ -19,37 +19,58 @@ import java.util.List;
 @RequestMapping("/api/amigos")
 @CrossOrigin(origins = "http://localhost:4200")
 /** Endpoints CRUD de amizades entre jogadores. */
-public class AmigosController extends CrudControllerSupport<Amigos> {
+public class AmigosController {
 
+    // Repository responsável por acessar os registros de amizades no banco.
+    private final AmigosRepository repository;
+
+    // O Spring injeta automaticamente o repository neste controller.
     public AmigosController(AmigosRepository repository) {
-        super(repository);
+        this.repository = repository;
     }
 
+    // Retorna todas as amizades cadastradas.
     @GetMapping
     public List<Amigos> listar() {
-        return listarRegistros();
+        return repository.findAll();
     }
 
+    // Procura uma amizade pelo seu ID.
     @GetMapping("/{id}")
     public ResponseEntity<Amigos> buscar(@PathVariable Long id) {
-        return buscarRegistro(id);
+        return repository.findById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    // Recebe os dados da amizade e cria um novo registro.
     @PostMapping
     public ResponseEntity<Amigos> criar(@RequestBody Amigos registro) {
-        return criarRegistro(registro);
+        return ResponseEntity.status(201).body(repository.save(registro));
     }
 
+    // Atualiza uma amizade que já existe.
     @PutMapping("/{id}")
     public ResponseEntity<Amigos> atualizar(
             @PathVariable Long id,
             @RequestBody Amigos registro
     ) {
-        return atualizarRegistro(id, registro);
+        if (!repository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        registro.setId(id);
+        return ResponseEntity.ok(repository.save(registro));
     }
 
+    // Exclui uma amizade pelo ID.
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> apagar(@PathVariable Long id) {
-        return apagarRegistro(id);
+        if (!repository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        repository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }

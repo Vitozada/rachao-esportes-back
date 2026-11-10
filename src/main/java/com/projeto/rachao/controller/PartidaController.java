@@ -19,37 +19,58 @@ import java.util.List;
 @RequestMapping("/api/partidas")
 @CrossOrigin(origins = "http://localhost:4200")
 /** Endpoints CRUD das partidas. */
-public class PartidaController extends CrudControllerSupport<Partida> {
+public class PartidaController {
 
+    // Repository responsável pelo acesso às partidas no banco.
+    private final PartidaRepository repository;
+
+    // O Spring injeta automaticamente o repository neste controller.
     public PartidaController(PartidaRepository repository) {
-        super(repository);
+        this.repository = repository;
     }
 
+    // Retorna todas as partidas cadastradas.
     @GetMapping
     public List<Partida> listar() {
-        return listarRegistros();
+        return repository.findAll();
     }
 
+    // Procura uma partida pelo seu ID.
     @GetMapping("/{id}")
     public ResponseEntity<Partida> buscar(@PathVariable Long id) {
-        return buscarRegistro(id);
+        return repository.findById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    // Cadastra uma nova partida.
     @PostMapping
     public ResponseEntity<Partida> criar(@RequestBody Partida registro) {
-        return criarRegistro(registro);
+        return ResponseEntity.status(201).body(repository.save(registro));
     }
 
+    // Atualiza uma partida existente.
     @PutMapping("/{id}")
     public ResponseEntity<Partida> atualizar(
             @PathVariable Long id,
             @RequestBody Partida registro
     ) {
-        return atualizarRegistro(id, registro);
+        if (!repository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        registro.setId(id);
+        return ResponseEntity.ok(repository.save(registro));
     }
 
+    // Exclui uma partida pelo ID.
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> apagar(@PathVariable Long id) {
-        return apagarRegistro(id);
+        if (!repository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        repository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }

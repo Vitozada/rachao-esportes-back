@@ -14,9 +14,13 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:4200")
 public class JogadorController {
 
+    // Repository usado para consultar e salvar jogadores no banco.
     private final JogadorRepository repository;
+
+    // Componente usado para criptografar as senhas antes do cadastro.
     private final PasswordEncoder passwordEncoder;
 
+    // O Spring injeta o repository e o codificador de senha no controller.
     public JogadorController(JogadorRepository repository, PasswordEncoder passwordEncoder) {
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
@@ -72,6 +76,7 @@ public class JogadorController {
     private JogadorDTO converter(Jogador jogador) {
         JogadorDTO dto = new JogadorDTO();
 
+        // Copia apenas os dados públicos para evitar devolver a senha na API.
         dto.setId(jogador.getId());
         dto.setNome(jogador.getNome());
         dto.setEmail(jogador.getEmail());

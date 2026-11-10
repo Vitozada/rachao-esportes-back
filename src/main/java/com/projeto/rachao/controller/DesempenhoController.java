@@ -19,37 +19,58 @@ import java.util.List;
 @RequestMapping("/api/desempenhos")
 @CrossOrigin(origins = "http://localhost:4200")
 /** Endpoints CRUD do desempenho dos jogadores. */
-public class DesempenhoController extends CrudControllerSupport<Desempenho> {
+public class DesempenhoController {
 
+    // Repository responsável por acessar os desempenhos no banco.
+    private final DesempenhoRepository repository;
+
+    // O Spring injeta automaticamente o repository neste controller.
     public DesempenhoController(DesempenhoRepository repository) {
-        super(repository);
+        this.repository = repository;
     }
 
+    // Retorna todos os desempenhos cadastrados.
     @GetMapping
     public List<Desempenho> listar() {
-        return listarRegistros();
+        return repository.findAll();
     }
 
+    // Procura um desempenho pelo seu ID.
     @GetMapping("/{id}")
     public ResponseEntity<Desempenho> buscar(@PathVariable Long id) {
-        return buscarRegistro(id);
+        return repository.findById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    // Cria um novo registro de desempenho.
     @PostMapping
     public ResponseEntity<Desempenho> criar(@RequestBody Desempenho registro) {
-        return criarRegistro(registro);
+        return ResponseEntity.status(201).body(repository.save(registro));
     }
 
+    // Atualiza um desempenho existente.
     @PutMapping("/{id}")
     public ResponseEntity<Desempenho> atualizar(
             @PathVariable Long id,
             @RequestBody Desempenho registro
     ) {
-        return atualizarRegistro(id, registro);
+        if (!repository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        registro.setId(id);
+        return ResponseEntity.ok(repository.save(registro));
     }
 
+    // Exclui um desempenho pelo ID.
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> apagar(@PathVariable Long id) {
-        return apagarRegistro(id);
+        if (!repository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        repository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }

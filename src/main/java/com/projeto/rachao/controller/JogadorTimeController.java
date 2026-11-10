@@ -19,37 +19,58 @@ import java.util.List;
 @RequestMapping("/api/jogadores-times")
 @CrossOrigin(origins = "http://localhost:4200")
 /** Endpoints CRUD da associação entre jogadores e times. */
-public class JogadorTimeController extends CrudControllerSupport<JogadorTime> {
+public class JogadorTimeController {
 
+    // Repository responsável pelo acesso à relação entre jogadores e times.
+    private final JogadorTimeRepository repository;
+
+    // O Spring injeta automaticamente o repository neste controller.
     public JogadorTimeController(JogadorTimeRepository repository) {
-        super(repository);
+        this.repository = repository;
     }
 
+    // Retorna todas as relações entre jogadores e times.
     @GetMapping
     public List<JogadorTime> listar() {
-        return listarRegistros();
+        return repository.findAll();
     }
 
+    // Procura uma relação jogador-time pelo seu ID.
     @GetMapping("/{id}")
     public ResponseEntity<JogadorTime> buscar(@PathVariable Long id) {
-        return buscarRegistro(id);
+        return repository.findById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    // Cadastra um jogador em um time.
     @PostMapping
     public ResponseEntity<JogadorTime> criar(@RequestBody JogadorTime registro) {
-        return criarRegistro(registro);
+        return ResponseEntity.status(201).body(repository.save(registro));
     }
 
+    // Atualiza uma relação existente.
     @PutMapping("/{id}")
     public ResponseEntity<JogadorTime> atualizar(
             @PathVariable Long id,
             @RequestBody JogadorTime registro
     ) {
-        return atualizarRegistro(id, registro);
+        if (!repository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        registro.setId(id);
+        return ResponseEntity.ok(repository.save(registro));
     }
 
+    // Remove um jogador de um time pelo ID da relação.
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> apagar(@PathVariable Long id) {
-        return apagarRegistro(id);
+        if (!repository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        repository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }

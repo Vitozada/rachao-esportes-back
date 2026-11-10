@@ -19,37 +19,58 @@ import java.util.List;
 @RequestMapping("/api/times")
 @CrossOrigin(origins = "http://localhost:4200")
 /** Endpoints CRUD dos times. */
-public class TimeController extends CrudControllerSupport<Time> {
+public class TimeController {
 
+    // Repository responsável pelo acesso aos times no banco.
+    private final TimesRepository repository;
+
+    // O Spring injeta automaticamente o repository neste controller.
     public TimeController(TimesRepository repository) {
-        super(repository);
+        this.repository = repository;
     }
 
+    // Retorna todos os times cadastrados.
     @GetMapping
     public List<Time> listar() {
-        return listarRegistros();
+        return repository.findAll();
     }
 
+    // Procura um time pelo seu ID.
     @GetMapping("/{id}")
     public ResponseEntity<Time> buscar(@PathVariable Long id) {
-        return buscarRegistro(id);
+        return repository.findById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    // Cadastra um novo time.
     @PostMapping
     public ResponseEntity<Time> criar(@RequestBody Time registro) {
-        return criarRegistro(registro);
+        return ResponseEntity.status(201).body(repository.save(registro));
     }
 
+    // Atualiza um time existente.
     @PutMapping("/{id}")
     public ResponseEntity<Time> atualizar(
             @PathVariable Long id,
             @RequestBody Time registro
     ) {
-        return atualizarRegistro(id, registro);
+        if (!repository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        registro.setId(id);
+        return ResponseEntity.ok(repository.save(registro));
     }
 
+    // Exclui um time pelo ID.
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> apagar(@PathVariable Long id) {
-        return apagarRegistro(id);
+        if (!repository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        repository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }
