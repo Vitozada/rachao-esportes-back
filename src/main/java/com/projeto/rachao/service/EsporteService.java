@@ -21,7 +21,6 @@ public class EsporteService {
 
     @Transactional(readOnly = true)
     public Esportes buscar(Long id) {
-        return esportes.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Esporte não encontrado."));
+        return esportes.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Esporte não encontrado."));
     }
 }

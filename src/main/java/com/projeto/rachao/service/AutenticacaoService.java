@@ -14,9 +14,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-/** Login de MVP: token aleatório mantido em memória, com validade de 12 horas.
- * Não é JWT. Reiniciar o servidor invalida todos os tokens.
- */
 @Service
 public class AutenticacaoService {
     private static final long VALIDADE_SEGUNDOS = 12 * 60 * 60;
